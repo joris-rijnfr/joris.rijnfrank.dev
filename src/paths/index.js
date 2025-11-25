@@ -1,7 +1,7 @@
 import { renderTemplate } from "../../build/forge-build.js";
 
 
-const GITHUB_USERNAME = "TheGeorgeAlexander";
+const GITHUB_USERNAME = "joris-rijnfr";
 
 
 export default {
@@ -12,7 +12,7 @@ export default {
 
         // Get data from cache, or GitHub API if cache is empty
         try {
-            const cachedResponse = await caches.default.match("https://george-alexander.dev/api/repos");
+            const cachedResponse = await caches.default.match("https://joris.rijnfrank.dev/api/repos");
             if(cachedResponse) {
                 githubData = await cachedResponse.json();
             } else {
@@ -28,7 +28,7 @@ export default {
 
         // Store new data in cache
         if(!usedCache) {
-            ctx.waitUntil(caches.default.put("https://george-alexander.dev/api/repos", new Response(JSON.stringify(githubData), {
+            ctx.waitUntil(caches.default.put("https://joris.rijnfrank.dev/api/repos", new Response(JSON.stringify(githubData), {
                 headers: {
                     "Cache-Control": "public, max-age=3600"
                 }

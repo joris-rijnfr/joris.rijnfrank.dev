@@ -1,5 +1,5 @@
 {
-    "name": "george-alexander",
+    "name": "joris-rijnfrank",
     "main": "src/main.js",
     "compatibility_date": "2025-05-19",
     "workers_dev": false,
@@ -13,7 +13,7 @@
     },
     "routes": [
         {
-            "pattern": "george-alexander.dev",
+            "pattern": "joris.rijnfrank.dev",
             "custom_domain": true
         }
     ]

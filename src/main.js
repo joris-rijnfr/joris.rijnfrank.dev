@@ -13,9 +13,22 @@ export default {
         try {
             pathModule = await import(`./paths/${url.pathname.substring(1)}.js`);
         } catch(e) {
-            return page404.fetch(request, env, ctx);
+            return addCacheHeader(await page404.fetch(request, env, ctx));
         }
 
-        return pathModule.default.fetch(request, env, ctx);
+        return addCacheHeader(await pathModule.default.fetch(request, env, ctx));
     }
+}
+
+
+
+function addCacheHeader(response) {
+    const headers = new Headers(response.headers);
+    if(!headers.has("Cache-Control")) {
+        headers.set("Cache-Control", "public, max-age=60, stale-while-revalidate=3600, stale-if-error=86400");
+    }
+    return new Response(response.body, {
+        status: response.status,
+        headers
+    });
 }
