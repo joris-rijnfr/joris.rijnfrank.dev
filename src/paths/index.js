@@ -8,6 +8,7 @@ export default {
     async fetch(request, env, ctx) {
         let githubData = [];
         let usedCache = true;
+        let shouldCache = false;
         let error;
 
         // Get data from cache, or GitHub API if cache is empty
@@ -16,10 +17,17 @@ export default {
             if(cachedResponse) {
                 githubData = await cachedResponse.json();
             } else {
-                githubData = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos`, {
-                    headers: { "User-Agent": GITHUB_USERNAME }
-                }).then(res => res.json());
                 usedCache = false;
+                const githubDataRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos`, {
+                    headers: { "User-Agent": GITHUB_USERNAME }
+                });
+                
+                if(githubDataRes.status != 200) {
+                    error = `Wasn't able to fetch repositories from GitHub.<code>Error ${githubDataRes.status} ${githubDataRes.statusText}</code>`
+                } else {
+                    githubData = await githubDataRes.json();
+                    shouldCache = true;
+                }
             }
         } catch(e) {
             console.error(e);
@@ -27,7 +35,7 @@ export default {
         }
 
         // Store new data in cache
-        if(!usedCache) {
+        if(shouldCache) {
             ctx.waitUntil(caches.default.put("https://joris.rijnfrank.dev/api/repos", new Response(JSON.stringify(githubData), {
                 headers: {
                     "Cache-Control": "public, max-age=3600"
