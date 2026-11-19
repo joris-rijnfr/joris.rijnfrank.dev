@@ -16,5 +16,8 @@
             "pattern": "joris.rijnfrank.dev",
             "custom_domain": true
         }
-    ]
+    ],
+	"secrets": {
+		"required": ["GITHUB_TOKEN"]
+	}
 }

@@ -19,7 +19,10 @@ export default {
             } else {
                 usedCache = false;
                 const githubDataRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos`, {
-                    headers: { "User-Agent": GITHUB_USERNAME }
+                    headers: {
+                        "User-Agent": GITHUB_USERNAME,
+                        "Authorization": `Bearer ${env.GITHUB_TOKEN}`
+                    }
                 });
                 
                 if(githubDataRes.status != 200) {
