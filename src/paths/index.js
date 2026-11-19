@@ -1,8 +1,6 @@
 import { renderTemplate } from "../../build/forge-build.js";
 
 
-const GITHUB_USERNAME = "joris-rijnfr";
-
 
 export default {
     async fetch(request, env, ctx) {
@@ -18,9 +16,9 @@ export default {
                 githubData = await cachedResponse.json();
             } else {
                 usedCache = false;
-                const githubDataRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos`, {
+                const githubDataRes = await fetch(`https://api.github.com/user/repos?visibility=public`, {
                     headers: {
-                        "User-Agent": GITHUB_USERNAME,
+                        "User-Agent": "joris.rijnfrank.dev",
                         "Authorization": `Bearer ${env.GITHUB_TOKEN}`
                     }
                 });
@@ -41,12 +39,12 @@ export default {
         if(shouldCache) {
             ctx.waitUntil(caches.default.put("https://joris.rijnfrank.dev/api/repos", new Response(JSON.stringify(githubData), {
                 headers: {
-                    "Cache-Control": "public, max-age=3600"
+                    "Cache-Control": "public, max-age=900"
                 }
             })));
         }
 
-        // Sort the repos, most stars first, a repo with description has priority, otherwise newest update
+        // Sort the repos, most stars first, a repo with description has priority, otherwise newest push
         try {
             githubData.sort((a, b) => {
                 if(b.stargazers_count != a.stargazers_count) {
@@ -58,7 +56,7 @@ export default {
                 if(!b.description && a.description) {
                     return -1;
                 }
-                return new Date(b.updated_at) - new Date(a.updated_at);
+                return new Date(b.pushed_at) - new Date(a.pushed_at);
             });
         } catch(e) { // Just in case API data somehow isn't an array of repos
             console.log(e)

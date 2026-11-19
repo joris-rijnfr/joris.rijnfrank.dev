@@ -33,7 +33,7 @@
                         <span>${data.formatSize(repo.size)}</span>
                     </div>
                     <p class="repo-language">Mainly written in <strong>${repo.language ?? "Unknown"}</strong></p>
-                    <p class="repo-updated">Updated ${data.timeAgo(new Date(repo.updated_at))}</p>
+                    <p class="repo-pushed">Last push ${data.timeAgo(new Date(repo.pushed_at))}</p>
                 </a>
             `)}
         </div>
